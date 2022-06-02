@@ -25,5 +25,10 @@ module.exports = {
     'no-shadow': 'warn',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
+    'import/prefer-default-export': 'off',
+    'import/no-extraneous-dependencies': 'off',
+    'no-unused-vars': 'warn',
+    'no-param-reassign': 'warn',
+    'react/button-has-type': 'off',
   },
 };
