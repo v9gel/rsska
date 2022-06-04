@@ -1,40 +1,72 @@
-import { types, flow } from 'mobx-state-tree';
-
-async function fetchUserFromApi(token: string) {
-  const response = await fetch('https://rsska.user-penguin.space/me', {
-    method: 'GET',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      accept: 'application/json',
-      authorization: `Basic ${token}`,
-    },
-  });
-  const json = await response.json();
-
-  return json.login;
-}
+import axios from 'axios';
+import {
+  types, flow, cast, applySnapshot,
+} from 'mobx-state-tree';
+import {
+  axiosInitSignIn, axiosSignIn, axiosSignOut, getToken,
+} from '../../src/config/axios';
 
 export const User = types
   .model('User', {
-    login: types.optional(types.string, '', [undefined]),
-    token: types.optional(types.string, '', [undefined]),
+    login: types.maybeNull(types.string),
   })
+  .views((self) => ({
+    get isAuth() {
+      return Boolean(self.login);
+    },
+  }))
   .actions((self) => ({
-    fetchUser: flow(function* fetchUser() {
+    fetchUserInfo: flow(function* fetchUserInfo() {
       try {
-        self.login = yield fetchUserFromApi(self.token);
+        const { login } = yield axios('/me');
+        self.login = login;
       } catch (error) {
-        console.error('Неудалось получить пользователя', error);
+        console.error('Не удалось получить информацию о пользователе', error);
       }
     }),
-    afterCreate() {
-      const tokenFromLocalStorage = localStorage.getItem('token');
+    signUp: flow(function* registerUser(login: string, password: string) {
+      try {
+        const response = yield axios({
+          method: 'post',
+          url: '/register',
+          data: {
+            login,
+            password,
+          },
+        });
+        self.login = response.login;
 
-      if (tokenFromLocalStorage) {
-        self.token = tokenFromLocalStorage;
-        this.fetchUser();
+        axiosSignIn(getToken(login, password));
+      } catch (error) {
+        console.error('Не удалось зарегистрировать пользователя', error);
+      }
+    }),
+    signIn: flow(function* registerUser(login: string, password: string) {
+      try {
+        const response = yield axios({
+          method: 'post',
+          url: '/login',
+          data: {
+            login,
+            password,
+          },
+        });
+        self.login = response.login;
+
+        axiosSignIn(getToken(login, password));
+        return true;
+      } catch (error) {
+        console.error('Не удалось авторизоваться', error);
+        return false;
+      }
+    }),
+    signOut() {
+      self.login = null;
+      axiosSignOut();
+    },
+    afterCreate() {
+      if (axiosInitSignIn()) {
+        this.fetchUserInfo();
       }
     },
   }));

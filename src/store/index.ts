@@ -12,7 +12,7 @@ export const RootStore = types
   })
   .actions((self) => ({
     afterCreate() {
-      console.log('store created');
+      console.log('Хранилище создано');
     },
   }));
 
@@ -20,6 +20,7 @@ export type IRootStore = Instance<typeof RootStore>
 
 export const store: IRootStore = RootStore.create({
   user: {
+    login: null,
   },
   counter: {
     count: 0,

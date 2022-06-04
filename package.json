@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "grommet": "^2.24.0",
     "grommet-icons": "^4.7.0",
     "mobx": "^6.6.0",
@@ -15,6 +16,7 @@
     "mobx-state-tree": "^5.1.5",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-router-dom": "6",
     "styled-components": "^5.3.5"
   },
   "devDependencies": {
