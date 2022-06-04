@@ -1,15 +1,15 @@
+import { Box, Grommet } from 'grommet';
 import { observer } from 'mobx-react-lite';
-import { useStore } from './store/index';
+import { theme } from './consts/theme';
+import { Singin } from './pages/Singin';
 
 function App() {
-  const { counter, user } = useStore();
-
   return (
-    <div>
-      { `${counter.count} `}
-      <button onClick={() => counter.add()}>+1</button>
-      {` ${user.token} - ${user.login}`}
-    </div>
+    <Grommet theme={theme} full>
+      <Box pad="small" gap="small" align="center" justify="center" fill="vertical" flex="grow">
+        <Singin />
+      </Box>
+    </Grommet>
   );
 }
 
