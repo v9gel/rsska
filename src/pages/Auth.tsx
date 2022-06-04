@@ -1,8 +1,8 @@
-import { useState } from 'react';
+/* eslint-disable prefer-regex-literals */
+import { ReactNode, useState } from 'react';
 import {
   Box,
   Button,
-  List,
   Form,
   FormField,
   Header,
@@ -17,20 +17,24 @@ import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../store';
 
-const passwordRequirements = [
-  {
-    regexp: /(?=.*?[a-zA-Z0-9#?!@$ %^&*-]).{8,}/,
-    message: 'Пароль не соответствует требованиям',
-    status: 'error',
-  },
-];
+interface IPasswordRule {
+  regexp?: RegExp;
+  message?: string | ReactNode;
+  status?: 'error' | 'info';
+  valid?: boolean,
+}
 
-const passwordRulesStrong = [
+const passwordRequirements: IPasswordRule = {
+  regexp: new RegExp('(?=.*?[a-zA-Z0-9#?!@$ %^&*-]).{8,}'),
+  message: 'Пароль не соответствует требованиям',
+  status: 'error',
+};
+
+const passwordRulesStrong: IPasswordRule[] = [
   {
-    regexp: /.{8,}/,
+    regexp: new RegExp('.{8,}'),
     message: 'Не менее 8 символов',
     status: 'error',
-    valid: true,
   },
 ];
 
@@ -58,7 +62,7 @@ export const Auth = observer(({ isSignIn }: IProps) => {
     setFormValues(values);
     const adjustedPasswordRules = passwordRules.map((rule) => {
       const adjustedRule = { ...rule };
-      const valid = adjustedRule.regexp.test(values.password);
+      const valid = adjustedRule.regexp?.test(values.password);
       adjustedRule.valid = valid;
       return adjustedRule;
     });
@@ -120,32 +124,28 @@ export const Auth = observer(({ isSignIn }: IProps) => {
               htmlFor="password"
               name="password"
               info={(
-                !isSignIn && (
-                <List data={passwordRules} border={{ color: 'none' }} pad="none">
-                  {(rule) => {
-                    if (
-                      formValues.password === undefined
+                !isSignIn && passwordRules.map((rule: IPasswordRule) => {
+                  if (
+                    formValues.password === undefined
                     || formValues.password.length === 0
-                    ) {
-                      return (
-                        <Box direction="row" gap="xsmall">
-                          <Text size="xsmall">{rule.message}</Text>
-                        </Box>
-                      );
-                    }
+                  ) {
                     return (
                       <Box direction="row" gap="xsmall">
-                        {formValues.password && rule.valid && (
-                        <Box alignSelf="center">
-                          <FormCheckmark size="small" />
-                        </Box>
-                        )}
                         <Text size="xsmall">{rule.message}</Text>
                       </Box>
                     );
-                  }}
-                </List>
-                )
+                  }
+                  return (
+                    <Box direction="row" gap="xsmall">
+                      {formValues.password && rule.valid && (
+                        <Box alignSelf="center">
+                          <FormCheckmark size="small" />
+                        </Box>
+                      )}
+                      <Text size="xsmall">{rule.message}</Text>
+                    </Box>
+                  );
+                })
             )}
             >
               <TextInput
