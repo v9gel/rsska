@@ -15,7 +15,7 @@ export const Sidebar = observer(() => {
 
   return (
 
-    <Box align="start" justify="center" fill="vertical" pad={{ right: 'xlarge', left: 'medium', vertical: 'medium' }} gap="small" background="light-2">
+    <Box align="start" justify="center" fill="vertical" pad={{ right: 'medium', left: 'medium', vertical: 'small' }} gap="small" background="light-2">
       <Box align="center" justify="center" direction="row" gap="small">
         <Box align="center" justify="center" background={{ image: 'url(https://github.com/v9gel/rsska/blob/master/src/logo.png?raw=true)', position: 'top' }} round={{ corner: 'bottom' }} pad="small" width="xxsmall" height="xxsmall" />
         <Button onClick={() => navigate('/')}>
@@ -23,8 +23,8 @@ export const Sidebar = observer(() => {
         </Button>
       </Box>
       <Box align="start" justify="start" flex gap="medium" pad={{ vertical: 'small' }}>
-        <Button label="Добавить канал" icon={<Add />} plain margin={{ bottom: 'small' }} />
-        <Button label="Лента" icon={<Article />} plain margin={{ bottom: 'small' }} />
+        <Button label="Добавить канал" icon={<Add />} plain margin={{ bottom: 'small' }} onClick={() => navigate('add')} />
+        <Button label="Лента" icon={<Article />} plain margin={{ bottom: 'small' }} onClick={() => navigate('/')} />
       </Box>
       <Box align="center" justify="center" direction="row" gap="small">
         <Box align="center" justify="center" background={{ color: 'brand' }} round="full" pad="small" width="xxsmall" height="xxsmall">

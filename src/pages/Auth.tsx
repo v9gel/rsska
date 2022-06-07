@@ -80,6 +80,9 @@ export const Auth = observer(({ isSignIn }: IProps) => {
 
   return (
     <Box pad="small" gap="small" align="center" justify="center" fill="vertical" flex="grow">
+      <Box
+        pad={{ horizontal: 'xxsmall' }}
+      />
       <Box gap="medium" width="medium">
         <Header
           direction="column"

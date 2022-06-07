@@ -1,2 +1,2 @@
-export const API_ROOT = 'https://rsska.user-penguin.space';
+export const API_ROOT = 'http://localhost:8080';
 export const PUBLIC_PAGES = ['/signin', '/signup'];
